@@ -1,4 +1,5 @@
-﻿using FizzBuzzService.Models;
+﻿using FizzBuzzService.Exceptions;
+using FizzBuzzService.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FizzBuzzService.Controllers
@@ -16,9 +17,17 @@ namespace FizzBuzzService.Controllers
         }
 
         [HttpPost]
-        public FizzBuzzResult WriteFizzBuzz(FizzBuzzRequest fizzBuzzRequest)
+        public IActionResult WriteFizzBuzz(FizzBuzzRequest fizzBuzzRequest)
         {
             FizzBuzzResult result = new FizzBuzzResult(fizzBuzzRequest);
+
+            if (fizzBuzzRequest.LimitNumber < fizzBuzzRequest.StartRamdomNumber)
+            {
+                LimitLessThanStartingNumberException e = new LimitLessThanStartingNumberException();
+                _logger.LogError("{0}: {1}", DateTime.Now, e.Message);
+                return StatusCode(501, new ErrorResponse(e.Message));
+                
+            }
 
             for (int i = fizzBuzzRequest.StartRamdomNumber; i <= fizzBuzzRequest.LimitNumber; i++)
             {
@@ -47,7 +56,7 @@ namespace FizzBuzzService.Controllers
 
             _logger.LogInformation("{0}: {1}", DateTime.Now, result.FizzBuzzString);
 
-            return result;
+            return Ok(result);
         }
     }
 }
