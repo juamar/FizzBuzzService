@@ -26,7 +26,8 @@ app.UseCors(
         "http://localhost:4200",
         "https://localhost:4200",
         "http://192.168.2.148:4200",
-        "https://192.168.2.148:4200"
+        "https://192.168.2.148:4200",
+        "https://fizzbuzz.climaenruta.eu"
     ).AllowAnyMethod().AllowAnyHeader()
 );
 
